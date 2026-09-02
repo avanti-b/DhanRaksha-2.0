@@ -1,0 +1,17 @@
+# ── Application runtime ───────────────────────────────────────────
+Flask==3.0.3
+flask-cors==4.0.1
+gunicorn==22.0.0
+
+# ── ML / inference ────────────────────────────────────────────────
+# scikit-learn must match the version the artifacts were pickled with.
+scikit-learn==1.5.1
+numpy==1.26.4
+pandas==2.2.2
+joblib==1.4.2
+
+# ── Training only (not needed to serve predictions) ───────────────
+imbalanced-learn==0.12.3
+
+# ── Tests ─────────────────────────────────────────────────────────
+pytest==8.2.2
