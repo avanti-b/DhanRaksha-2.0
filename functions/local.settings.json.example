@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "PASTE_STORAGE_CONNECTION_STRING_HERE",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "ASYNC_QUEUE_NAME": "transaction-queue",
+    "COSMOS_ENDPOINT": "https://YOUR-COSMOS-ACCOUNT.documents.azure.com:443/",
+    "COSMOS_KEY": "PASTE_COSMOS_PRIMARY_KEY_HERE",
+    "COSMOS_DATABASE": "dhanraksha",
+    "COSMOS_TRANSACTIONS_CONTAINER": "transactions",
+    "BLOB_REPORTS_CONTAINER": "reports"
+  }
+}

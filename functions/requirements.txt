@@ -1,0 +1,7 @@
+# Azure Functions runtime dependencies.
+# Deliberately minimal: the Function does no ML, so scikit-learn, pandas and
+# numpy are not installed here. That keeps cold starts fast and the deployment
+# package small.
+azure-functions==1.20.0
+azure-cosmos==4.7.0
+azure-storage-blob==12.20.0

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DhanRaksha 2.0 — Fraud Detection &amp; Risk Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/dhanraksha.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ─────────────── SIDEBAR ─────────────── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <div class="brand-icon">₹</div>
+        <h1>DhanRaksha</h1>
+      </div>
+      <p>Risk Intelligence · 2.0</p>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Monitor</div>
+      <div class="nav-item active" data-view="dashboard"><span class="nav-pip"></span>Dashboard</div>
+      <div class="nav-item" data-view="transactions"><span class="nav-pip"></span>Transactions</div>
+      <div class="nav-item" data-view="cases"><span class="nav-pip"></span>Fraud cases</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Analyse</div>
+      <div class="nav-item" data-view="predict"><span class="nav-pip"></span>Score a transaction</div>
+      <div class="nav-item" data-view="model"><span class="nav-pip"></span>Model &amp; thresholds</div>
+      <div class="nav-item" data-view="about"><span class="nav-pip"></span>About the system</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <p>Milestone 1 · local build<br>Student research project</p>
+    </div>
+  </aside>
+
+  <!-- ─────────────── MAIN ─────────────── -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="breadcrumb" id="breadcrumb">Monitor</div>
+          <h2 id="page-title">Dashboard</h2>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="api-badge" id="api-badge">
+          <span class="api-dot"></span><span id="api-text">Connecting…</span>
+        </div>
+        <button class="refresh-btn" id="refresh-btn">Refresh</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="banner banner-error" id="global-banner"></div>
+
+      <!-- ══════════ DASHBOARD ══════════ -->
+      <section class="section active" id="view-dashboard">
+        <div class="metric-row">
+          <div class="metric-card gold">
+            <div class="metric-label">Transactions scored</div>
+            <div class="metric-val" id="d-total">—</div>
+            <div class="metric-sub" id="d-total-sub">from this deployment</div>
+          </div>
+          <div class="metric-card rust">
+            <div class="metric-label">Flagged as fraud</div>
+            <div class="metric-val metric-dn" id="d-fraud">—</div>
+            <div class="metric-sub" id="d-fraud-sub">—</div>
+          </div>
+          <div class="metric-card sage">
+            <div class="metric-label">High-risk</div>
+            <div class="metric-val" id="d-high">—</div>
+            <div class="metric-sub" id="d-high-sub">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Open cases</div>
+            <div class="metric-val" id="d-cases">—</div>
+            <div class="metric-sub" id="d-cases-sub">—</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Risk distribution <span class="card-title-tag">LIVE</span></div>
+            <div id="d-risk-bars"><p class="threshold-note">Loading…</p></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Scored by hour of day</div>
+            <div class="chart-wrap" style="height:200px"><canvas id="hourChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Amount bands</div>
+            <div class="chart-wrap" style="height:200px"><canvas id="bandChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Model in service</div>
+            <div class="kv-grid" id="d-model-grid"></div>
+            <p class="threshold-note" id="d-model-note"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Recent activity</div>
+          <div class="table-scroll">
+            <table class="tx-table">
+              <thead><tr><th>Transaction</th><th>Time</th><th>Amount</th><th>Probability</th><th>Risk</th><th>Decision</th></tr></thead>
+              <tbody id="d-recent"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ TRANSACTIONS ══════════ -->
+      <section class="section" id="view-transactions">
+        <div class="card">
+          <div class="card-title">Transaction history</div>
+          <div class="toolbar">
+            <div class="form-group">
+              <label>Risk level</label>
+              <select id="f-risk"><option value="">All</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select>
+            </div>
+            <div class="form-group">
+              <label>Decision</label>
+              <select id="f-prediction"><option value="">All</option><option value="fraud">Fraud</option><option value="legitimate">Legitimate</option></select>
+            </div>
+            <div class="form-group">
+              <label>From date</label>
+              <input type="date" id="f-start">
+            </div>
+            <div class="form-group">
+              <label>To date</label>
+              <input type="date" id="f-end">
+            </div>
+            <div class="form-group">
+              <label>Page size</label>
+              <select id="f-limit"><option>25</option><option selected>50</option><option>100</option></select>
+            </div>
+            <button class="ghost-btn" id="f-apply">Apply</button>
+            <button class="ghost-btn" id="f-clear">Clear</button>
+          </div>
+
+          <div class="table-scroll">
+            <table class="tx-table">
+              <thead><tr><th>Transaction ID</th><th>Timestamp (UTC)</th><th>Amount</th><th>Hour</th><th>Probability</th><th>Risk</th><th>Decision</th></tr></thead>
+              <tbody id="t-body"></tbody>
+            </table>
+          </div>
+          <div class="toolbar" style="margin-top:14px">
+            <button class="ghost-btn small" id="t-prev">Previous</button>
+            <button class="ghost-btn small" id="t-next">Next</button>
+            <span class="threshold-note" id="t-pagination"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CASES ══════════ -->
+      <section class="section" id="view-cases">
+        <div class="metric-row" id="c-summary"></div>
+        <div class="card">
+          <div class="card-title">Fraud cases <span class="card-title-tag">FROM SCORED TRANSACTIONS</span></div>
+          <div class="toolbar">
+            <div class="form-group">
+              <label>Status</label>
+              <select id="c-status">
+                <option value="">All</option><option>OPEN</option><option>UNDER_REVIEW</option>
+                <option>CONFIRMED_FRAUD</option><option>MARKED_LEGITIMATE</option><option>CLOSED</option>
+              </select>
+            </div>
+            <button class="ghost-btn" id="c-apply">Apply</button>
+          </div>
+          <div class="table-scroll">
+            <table class="tx-table">
+              <thead><tr><th>Case ID</th><th>Transaction</th><th>Opened (UTC)</th><th>Risk</th><th>Score</th><th>Status</th><th>Reviewer</th></tr></thead>
+              <tbody id="c-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ PREDICT ══════════ -->
+      <section class="section" id="view-predict">
+        <div class="card">
+          <div class="card-title">Score a transaction <span class="card-title-tag">LIVE MODEL</span></div>
+          <p class="threshold-note" style="margin-bottom:16px">
+            The request goes to <code>POST /api/v1/predict</code>. The probability shown is produced by the
+            trained Random Forest; the risk level comes from the rule-based Risk Engine. Every scored
+            transaction is persisted and appears in the history and analytics.
+          </p>
+
+          <div class="toolbar">
+            <button class="ghost-btn small" id="s-load">Load a dataset sample</button>
+            <button class="ghost-btn small" id="s-clear">Reset form</button>
+            <span class="threshold-note" id="s-note"></span>
+          </div>
+
+          <div class="two-col" style="margin-bottom:14px">
+            <div class="form-group"><label>Transaction amount</label><input type="number" id="p-amount" value="0" step="0.01" min="0"></div>
+            <div class="form-group"><label>Hour of day (0–23)</label><input type="number" id="p-hour" value="0" min="0" max="23"></div>
+          </div>
+
+          <div class="collapsible-head" id="v-toggle">
+            <div class="card-title" style="margin-bottom:0">PCA components V1–V28</div>
+            <button class="ghost-btn small" type="button">Show / hide</button>
+          </div>
+          <div class="collapsible-body hidden" id="v-body">
+            <p class="threshold-note" style="margin-bottom:12px">
+              These are the anonymised PCA features of the source dataset. Any left blank are sent as 0,
+              which is the mean of a centred component.
+            </p>
+            <div class="v-grid" id="v-grid"></div>
+          </div>
+
+          <button class="predict-btn" id="p-submit">Run prediction</button>
+          <div class="result-box" id="p-result">
+            <h3 id="p-result-label"></h3>
+            <p id="p-result-detail"></p>
+            <div style="margin-top:12px" id="p-result-signals"></div>
+            <p class="threshold-note" id="p-result-explain"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ MODEL ══════════ -->
+      <section class="section" id="view-model">
+        <div class="card">
+          <div class="card-title">Model card <span class="card-title-tag" id="m-version">—</span></div>
+          <div class="kv-grid" id="m-summary"></div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Test-set performance</div>
+            <div class="model-metrics" id="m-metrics"></div>
+            <p class="threshold-note">
+              Measured on the held-out stratified test split. SMOTE was applied only to the training
+              data, so these numbers reflect the real class imbalance.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">Confusion matrix</div>
+            <div class="conf-grid" id="m-confusion"></div>
+            <p class="threshold-note" id="m-confusion-note"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Threshold analysis</div>
+          <div class="table-scroll">
+            <table class="tx-table">
+              <thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>F1</th><th>False positives</th><th>False negatives</th></tr></thead>
+              <tbody id="m-thresholds"></tbody>
+            </table>
+          </div>
+          <p class="threshold-note">
+            Lowering the threshold catches more fraud but flags more legitimate customers. Raising it
+            reduces false alarms and lets more fraud through. The operating point is set with the
+            <code>FRAUD_THRESHOLD</code> environment variable, not hardcoded in the application.
+          </p>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Risk engine configuration</div>
+            <div class="kv-grid" id="m-risk"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Top feature importances</div>
+            <div id="m-importance"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ ABOUT ══════════ -->
+      <section class="section" id="view-about">
+        <div class="card">
+          <div class="card-title">What this system does</div>
+          <p style="font-size:13px;line-height:1.75;color:var(--bark2)">
+            DhanRaksha scores card transactions for fraud risk. A transaction is preprocessed with the
+            exact pipeline fitted during training, scored by a Random Forest classifier, then passed to a
+            deterministic Risk Engine that combines the model probability with transaction-level rules
+            derived from the training data. The result is persisted, and high-risk results open a fraud
+            case for review.
+          </p>
+          <div class="sect-divider"></div>
+          <div class="pipeline-steps">
+            <div class="pipeline-step"><div class="step-num">1</div><div class="step-content"><h4>Ingestion</h4><p>Transaction arrives at POST /api/v1/predict and is validated before anything else runs.</p></div></div>
+            <div class="pipeline-step"><div class="step-num">2</div><div class="step-content"><h4>Feature processing</h4><p>The saved FeaturePipeline scales Time and Amount using statistics fitted on the training split only. PCA components pass through untouched.</p></div></div>
+            <div class="pipeline-step"><div class="step-num">3</div><div class="step-content"><h4>Model</h4><p>Random Forest returns a calibrated-by-vote fraud probability. No probability is ever fabricated by the application.</p></div></div>
+            <div class="pipeline-step"><div class="step-num">4</div><div class="step-content"><h4>Risk engine</h4><p>Deterministic rules add explainable risk on top of the model score and classify LOW / MEDIUM / HIGH.</p></div></div>
+            <div class="pipeline-step"><div class="step-num">5</div><div class="step-content"><h4>Persistence</h4><p>The scored transaction is written to the local database. Analytics and history read only from those records.</p></div></div>
+            <div class="pipeline-step"><div class="step-num">6</div><div class="step-content"><h4>Case management</h4><p>HIGH-risk transactions open a fraud case that an analyst can review, assign and resolve.</p></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Scope and limitations</div>
+          <div class="disclaimer">
+            This is a student research project, not a production banking fraud system. It is trained on a
+            single public, anonymised dataset of European card transactions from 2013 whose features are
+            PCA components, so nothing here generalises to live payment traffic. There is no customer
+            identity, device, geography or transaction history available, so no behavioural signals are
+            computed — the Risk Engine exposes a seam for them rather than inventing them. Metrics are
+            measured on one held-out split with a fixed random seed and are not cross-validated.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- ─────────────── TRANSACTION DETAIL DRAWER ─────────────── -->
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <div class="breadcrumb">Transaction detail</div>
+      <h3 id="dr-title">—</h3>
+    </div>
+    <button class="drawer-close" id="dr-close">&times;</button>
+  </div>
+  <div id="dr-body"></div>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

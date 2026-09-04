@@ -1,0 +1,24 @@
+# One service: the app. No database container, no message broker, no
+# reverse proxy — SQLite is a file and the frontend is static, so adding
+# any of those would be architecture for its own sake.
+services:
+  dhanraksha:
+    build: .
+    container_name: dhanraksha
+    ports:
+      - "5000:5000"
+    environment:
+      APP_ENV: development
+      DATABASE_PATH: /app/data/dhanraksha.db
+      ARTIFACT_DIR: /app/ml/artifacts
+      FRAUD_THRESHOLD: "0.5"
+      RISK_HIGH_THRESHOLD: "0.70"
+      RISK_MEDIUM_THRESHOLD: "0.40"
+      AUTO_CREATE_CASES: "true"
+    volumes:
+      # Scored transactions and cases persist across rebuilds.
+      - dhanraksha-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  dhanraksha-data:

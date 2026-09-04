@@ -1,0 +1,27 @@
+# ══════════════════════════════════════════════════════════════════════════
+# Azure extras. NOT needed for local development.
+#
+# Local:  pip install -r requirements.txt
+# Azure:  pip install -r requirements.txt -r requirements-azure.txt
+#
+# Every module that imports these does so lazily, inside the function that
+# needs it, so a local install without this file works fine.
+# ══════════════════════════════════════════════════════════════════════════
+
+# Cosmos DB (STORAGE_BACKEND=cosmos)
+azure-cosmos==4.7.0
+
+# Blob Storage (model artifacts, reports) and Queues (async handoff)
+azure-storage-blob==12.20.0
+azure-storage-queue==12.10.0
+
+# Key Vault + managed identity
+azure-identity==1.17.1
+azure-keyvault-secrets==4.8.0
+
+# Application Insights
+azure-monitor-opentelemetry==1.6.1
+
+# Entra ID token validation
+python-jose[cryptography]==3.3.0
+requests==2.32.3

@@ -1,0 +1,40 @@
+# ══════════════════════════════════════════════════════════════════════════
+# Requirements for the AZURE APP SERVICE deployment ONLY.
+#
+# Azure's build step (Oryx) installs from a file named exactly
+# "requirements.txt". scripts/deploy.ps1 stages a copy of the project and
+# copies THIS file over requirements.txt inside that staging folder, so the
+# deployed app gets the Azure SDKs while local development keeps a small,
+# Azure-free dependency list.
+#
+# Do not install this file locally unless you are working on Azure code paths;
+# use requirements.txt (+ requirements-azure.txt if needed) instead.
+# ══════════════════════════════════════════════════════════════════════════
+
+# --- application runtime ---------------------------------------------------
+Flask==3.0.3
+flask-cors==4.0.1
+gunicorn==22.0.0
+
+# --- ML / inference --------------------------------------------------------
+# scikit-learn must match the version the artifacts were pickled with.
+scikit-learn==1.5.1
+numpy==1.26.4
+pandas==2.2.2
+joblib==1.4.2
+
+# --- Azure ----------------------------------------------------------------
+azure-cosmos==4.7.0
+azure-storage-blob==12.20.0
+azure-storage-queue==12.10.0
+azure-identity==1.17.1
+azure-keyvault-secrets==4.8.0
+azure-monitor-opentelemetry==1.6.1
+
+# --- Entra ID token validation (only used when AUTH_ENABLED=true) ---------
+python-jose[cryptography]==3.3.0
+requests==2.32.3
+
+# NOTE: imbalanced-learn and pytest are deliberately absent. Training and
+# testing happen locally, so the deployed app does not need them. This keeps
+# the App Service build faster and its memory footprint smaller.

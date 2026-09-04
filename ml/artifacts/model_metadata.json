@@ -1,0 +1,307 @@
+{
+  "model_version": "rf-v1",
+  "algorithm": "RandomForestClassifier",
+  "hyperparameters": {
+    "n_estimators": 100,
+    "max_depth": null,
+    "class_weight": "balanced",
+    "random_state": 42,
+    "min_samples_leaf": 1
+  },
+  "trained_at": "2026-09-01T18:07:51.524458+00:00",
+  "training_duration_seconds": 323.65,
+  "python_version": "3.12.3",
+  "feature_columns": [
+    "Time",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "scaled_columns": [
+    "Time",
+    "Amount"
+  ],
+  "dataset": {
+    "path": "creditcard.csv",
+    "cleaning": {
+      "rows_in": 284807,
+      "rows_with_nulls_dropped": 0,
+      "duplicate_rows_dropped": 1081,
+      "rows_out": 283726
+    },
+    "total_rows": 283726,
+    "fraud_rows": 473,
+    "legitimate_rows": 283253,
+    "fraud_percentage": 0.1667,
+    "test_size": 0.2,
+    "random_seed": 42
+  },
+  "resampling": {
+    "method": "SMOTE",
+    "applied_to": "training split only",
+    "before": {
+      "legit": 226602,
+      "fraud": 378
+    },
+    "after": {
+      "legit": 226602,
+      "fraud": 226602
+    }
+  },
+  "metrics": {
+    "random_forest": {
+      "threshold": 0.5,
+      "precision": 0.9113924050632911,
+      "recall": 0.7578947368421053,
+      "f1_score": 0.8275862068965517,
+      "roc_auc": 0.9662043407047209,
+      "pr_auc": 0.8039814074285083,
+      "confusion_matrix": [
+        [
+          56644,
+          7
+        ],
+        [
+          23,
+          72
+        ]
+      ],
+      "true_negatives": 56644,
+      "false_positives": 7,
+      "false_negatives": 23,
+      "true_positives": 72,
+      "support": {
+        "legitimate": 56651,
+        "fraud": 95
+      }
+    },
+    "logistic_regression_baseline": {
+      "threshold": 0.5,
+      "precision": 0.053035143769968054,
+      "recall": 0.8736842105263158,
+      "f1_score": 0.1,
+      "roc_auc": 0.9618957810936585,
+      "pr_auc": 0.6768816018011278,
+      "confusion_matrix": [
+        [
+          55169,
+          1482
+        ],
+        [
+          12,
+          83
+        ]
+      ],
+      "true_negatives": 55169,
+      "false_positives": 1482,
+      "false_negatives": 12,
+      "true_positives": 83,
+      "support": {
+        "legitimate": 56651,
+        "fraud": 95
+      }
+    }
+  },
+  "threshold_analysis": [
+    {
+      "threshold": 0.3,
+      "precision": 0.77,
+      "recall": 0.8105,
+      "f1_score": 0.7897,
+      "false_positives": 23,
+      "false_negatives": 18
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.8736,
+      "recall": 0.8,
+      "f1_score": 0.8352,
+      "false_positives": 11,
+      "false_negatives": 19
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.9114,
+      "recall": 0.7579,
+      "f1_score": 0.8276,
+      "false_positives": 7,
+      "false_negatives": 23
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.9324,
+      "recall": 0.7263,
+      "f1_score": 0.8166,
+      "false_positives": 5,
+      "false_negatives": 26
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.9714,
+      "recall": 0.7158,
+      "f1_score": 0.8242,
+      "false_positives": 2,
+      "false_negatives": 27
+    }
+  ],
+  "feature_importances_top15": [
+    {
+      "feature": "V14",
+      "importance": 0.1957193791346982
+    },
+    {
+      "feature": "V10",
+      "importance": 0.1134481560024185
+    },
+    {
+      "feature": "V12",
+      "importance": 0.0998188607493708
+    },
+    {
+      "feature": "V4",
+      "importance": 0.09182320657976323
+    },
+    {
+      "feature": "V17",
+      "importance": 0.09106140104842085
+    },
+    {
+      "feature": "V11",
+      "importance": 0.0584989005452931
+    },
+    {
+      "feature": "V3",
+      "importance": 0.056271787117417815
+    },
+    {
+      "feature": "V16",
+      "importance": 0.0560609942505103
+    },
+    {
+      "feature": "V2",
+      "importance": 0.03879747330634664
+    },
+    {
+      "feature": "V9",
+      "importance": 0.026183098037573065
+    },
+    {
+      "feature": "V21",
+      "importance": 0.015546570820308716
+    },
+    {
+      "feature": "V8",
+      "importance": 0.015146332505802936
+    },
+    {
+      "feature": "V7",
+      "importance": 0.01488957254887304
+    },
+    {
+      "feature": "V18",
+      "importance": 0.014286684013713623
+    },
+    {
+      "feature": "V19",
+      "importance": 0.012093453759287888
+    }
+  ],
+  "risk_reference": {
+    "derived_from": "training split of the Kaggle credit-card dataset",
+    "amount_percentiles": {
+      "p50": 22.08,
+      "p95": 364.7,
+      "p99": 1016.1596999999954,
+      "p999": 3042.7992600002985,
+      "max": 19656.53
+    },
+    "overall_fraud_rate": 0.0016653449643140364,
+    "fraud_rate_by_hour": {
+      "0": 0.0006572461386789353,
+      "1": 0.0017974835230677051,
+      "2": 0.013646702047005308,
+      "3": 0.00472212132219397,
+      "4": 0.010285714285714285,
+      "5": 0.004612159329140462,
+      "6": 0.0021691973969631237,
+      "7": 0.003486142583231654,
+      "8": 0.00072992700729927,
+      "9": 0.0011842728564661299,
+      "10": 0.0004514333007298172,
+      "11": 0.003348463427338344,
+      "12": 0.0010536553736424056,
+      "13": 0.0011434171839268213,
+      "14": 0.0010611688016372318,
+      "15": 0.0017588131834518621,
+      "16": 0.0011474030444427446,
+      "17": 0.0018587360594795538,
+      "18": 0.001622299240468992,
+      "19": 0.0011985617259288853,
+      "20": 0.0011931394481730052,
+      "21": 0.0008516678495386799,
+      "22": 0.0005676289328576062,
+      "23": 0.0018380241240666284
+    },
+    "elevated_risk_hours": [
+      2,
+      3,
+      4,
+      5,
+      7,
+      11
+    ],
+    "pca_legit_bounds": {
+      "V14": {
+        "low": -3.20768727769818,
+        "high": 2.451627328419165
+      },
+      "V17": {
+        "low": -1.4639246664238557,
+        "high": 2.791624901814136
+      },
+      "V12": {
+        "low": -3.285576229523761,
+        "high": 1.9013752230103849
+      },
+      "V10": {
+        "low": -2.3539153406453233,
+        "high": 4.897755476874806
+      },
+      "V4": {
+        "low": -3.4814126480150254,
+        "high": 4.559859551941146
+      },
+      "V11": {
+        "low": -2.2900509174919854,
+        "high": 2.494505671495367
+      }
+    }
+  },
+  "notes": "Metrics measured on the untouched stratified test split. SMOTE was never applied to the test data and the scaler was fitted on the training split only."
+}
